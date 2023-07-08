@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { Play } from 'phosphor-react'
 import {
   CountdownContainer,
@@ -10,6 +11,12 @@ import {
 } from './styles'
 
 export default function Home() {
+  const [inputTaskValue, setInputTaskValue] = useState('')
+
+  const handleInputTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputTaskValue(e.target.value)
+  }
+
   return (
     <HomeContainer>
       <form action="">
@@ -20,6 +27,8 @@ export default function Home() {
             id="task"
             placeholder="Give a name for the task"
             list="task-suggestions"
+            onChange={handleInputTaskChange}
+            value={inputTaskValue}
           />
           <datalist id="task-suggestions">
             <option value="Projeto 1" />
@@ -46,7 +55,7 @@ export default function Home() {
           <span>0</span>
         </CountdownContainer>
 
-        <StartCountDownButton type="submit" disabled>
+        <StartCountDownButton type="submit" disabled={!inputTaskValue}>
           <Play size={24} />
           Begin
         </StartCountDownButton>
