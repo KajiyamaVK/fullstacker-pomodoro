@@ -1,3 +1,6 @@
+import * as zod from 'zod'
+import { newCycleFormValidationSchema } from '../../components/NewCyclesForm/formValidations'
+
 export interface IForm {
   task: string
   minutesAmount: number
@@ -11,3 +14,5 @@ export interface ICycle {
   finishedDate?: Date
   interruptedCycle?: Date
 }
+
+export type formType = zod.infer<typeof newCycleFormValidationSchema>

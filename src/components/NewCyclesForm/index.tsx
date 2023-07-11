@@ -1,26 +1,15 @@
 import { FormContainer, TaskInput, MinutesAmountInput } from './styles'
-import { useForm } from 'react-hook-form'
+import { useContext } from 'react'
 import { ICycle } from '../../pages/Home/interfaces'
-import * as zod from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { newCycleFormValidationSchema } from './formValidations'
+import { useFormContext } from 'react-hook-form'
 
 interface INewCyclesForm {
   activeCycle: ICycle | undefined
 }
 
-type formType = zod.infer<typeof newCycleFormValidationSchema>
-
 export default function NewCyclesForm({ activeCycle }: INewCyclesForm) {
-  const { register, handleSubmit, formState, reset, watch } = useForm<formType>(
-    {
-      resolver: zodResolver(newCycleFormValidationSchema),
-      defaultValues: {
-        minutesAmount: 0,
-        task: '',
-      },
-    },
-  )
+  const { register } = useFormContext()
+
   return (
     <FormContainer>
       <label htmlFor="task">Going to work with</label>
