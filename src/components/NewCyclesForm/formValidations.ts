@@ -12,6 +12,6 @@ export const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, validationsMessages.task),
   minutesAmount: zod
     .number()
-    .min(5, validationsMessages.minutesAmount.min)
+    .min(1, validationsMessages.minutesAmount.min)
     .max(60, validationsMessages.minutesAmount.max),
 })
