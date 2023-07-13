@@ -4,8 +4,8 @@ import {
   StartCountDownButton,
   StopCountDownButton,
 } from './styles'
-import { useContext, useEffect } from 'react'
-import { ICycle, formType } from './interfaces'
+import { useContext } from 'react'
+import { IForm } from './interfaces'
 import { showError } from './functions'
 import NewCyclesForm from '../../components/NewCyclesForm'
 import CountDown from '../../components/CountDown'
@@ -15,79 +15,46 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { newCycleFormValidationSchema } from '../../components/NewCyclesForm/formValidations'
 
 export default function Home() {
-  const newCycleForm = useForm<formType>({
+  const newCycleForm = useForm<IForm>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
-      minutesAmount: undefined,
+      minutesAmount: 0,
       task: '',
     },
   })
 
-  const { handleSubmit, formState, reset, watch } = newCycleForm
+  const { handleSubmit, formState, watch, reset } = newCycleForm
 
   const {
     activeCycle,
-    setActiveCycle,
-    cycles,
-    setCycles,
-    setAmountSecondsPassed,
-    setActiveCycleId,
-    activeCycleId,
-    seconds,
-    minutes,
+    secondsFormatted,
+    minutesFormatted,
+    initiateNewCycle,
+    interruptActiveCycle,
   } = useContext(CycleContext)
-
-  if (activeCycleId || activeCycleId === 0) {
-    const newActiveCycle: ICycle | undefined = cycles.find(
-      (cycle) => cycle.id === activeCycleId,
-    )
-
-    setActiveCycle(newActiveCycle)
-  }
 
   const taskInput = watch('task')
   const minutesInput = watch('minutesAmount')
   const isSubmitDisabled = !(taskInput && minutesInput)
 
-  function saveFormData(data: formType) {
-    const newCycle: ICycle = {
-      id: new Date().getTime(),
-      task: data.task,
-      minutesAmount: data.minutesAmount,
-      startDate: new Date(),
-    }
-    setCycles([...cycles, newCycle])
-    setActiveCycleId(newCycle.id)
-    setAmountSecondsPassed(0)
-  }
-
-  if (activeCycleId) {
-    document.title = `${minutes}:${seconds}`
+  if (typeof activeCycle?.id !== 'undefined') {
+    document.title = `${minutesFormatted}:${secondsFormatted}`
   } else {
     document.title = 'Fullstacker Pomodoro'
   }
 
-  function handleInterruptCycle() {
-    if (activeCycle) {
-      setCycles((state) =>
-        state.map((cycle) => {
-          if (cycle.id === activeCycle.id) {
-            const now = new Date()
+  function handleStartNewCycle(data: IForm) {
+    initiateNewCycle(data)
+  }
 
-            return { ...cycle, interruptedDate: now }
-          } else {
-            return cycle
-          }
-        }),
-      )
-    }
-    setActiveCycleId(0)
+  function handleInterruptCycle() {
+    interruptActiveCycle()
     reset()
   }
 
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(saveFormData)}>
+      <form onSubmit={handleSubmit(handleStartNewCycle)}>
         <FormProvider {...newCycleForm}>
           <NewCyclesForm activeCycle={activeCycle} />
         </FormProvider>

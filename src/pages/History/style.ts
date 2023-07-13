@@ -57,16 +57,16 @@ export const HistoryList = styled.div`
   }
 `
 
-const STATUS_COLOR = {
-  yellow: 'yellow-500',
-  red: 'red-500',
-  green: 'green-500',
+const PHASES = {
+  onGoing: { statusColor: 'yellow-500', label: 'On Going' },
+  interrupted: { statusColor: 'red-500', label: 'Interrupted' },
+  concluded: { statusColor: 'green-500', label: 'Concluded' },
 } as const
 
-type statusColorType = keyof typeof STATUS_COLOR
+export type statusPhaseType = keyof typeof PHASES
 
 interface IStatusProps {
-  statusColor: statusColorType
+  phase: statusPhaseType
 }
 
 export const Status = styled.span<IStatusProps>`
@@ -79,6 +79,12 @@ export const Status = styled.span<IStatusProps>`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 8px;
-    background: ${(props) => props.theme[STATUS_COLOR[props.statusColor]]};
+    background: ${(props) => props.theme[PHASES[props.phase].statusColor]};
+  }
+
+  &::after {
+    content: '${(props) => PHASES[props.phase].label}';
+    width: 100%;
+    height: 100%;
   }
 `

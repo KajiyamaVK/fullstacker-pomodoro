@@ -1,10 +1,9 @@
 import { FormContainer, TaskInput, MinutesAmountInput } from './styles'
-import { useContext } from 'react'
 import { ICycle } from '../../pages/Home/interfaces'
 import { useFormContext } from 'react-hook-form'
 
 interface INewCyclesForm {
-  activeCycle: ICycle | undefined
+  activeCycle: ICycle | null
 }
 
 export default function NewCyclesForm({ activeCycle }: INewCyclesForm) {
